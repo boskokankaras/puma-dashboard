@@ -91,6 +91,10 @@
   .chip button:hover{background:var(--accent);color:#fff}
   /* izvoz meni */
   .expwrap{position:relative}
+  .split{display:flex}
+  .split-main{border-radius:9px 0 0 9px}
+  .split-arrow{border-radius:0 9px 9px 0;border-left:1px solid var(--line);padding:8px 10px;margin-left:-1px}
+  .split-main:hover,.split-arrow:hover{border-color:var(--accent);color:var(--accent);z-index:1}
   .expmenu{position:absolute;top:42px;right:0;z-index:60;background:var(--surface);border:1px solid var(--line);
     border-radius:12px;box-shadow:0 12px 40px rgba(20,22,28,.16);padding:7px;min-width:280px;display:none}
   .expmenu.open{display:block;animation:rise .18s both}
@@ -233,10 +237,10 @@
       <span class="zcount" id="zcount">0 sa željenim popustom</span>
       <div class="tbtns">
         <div class="expwrap">
-          <button class="tbtn" id="expBtn" title="Izvoz u Excel">⇩ Izvoz ▾</button>
+          <button class="tbtn" id="expBtn" title="Izvoz u Excel — uvijek izvozi prikazane kolone i filtrirane redove">⇩ Izvoz (.xlsx) ▾</button>
           <div class="expmenu" id="expMenu">
-            <button class="exp-item" id="expAll"><span class="ei">📄</span><span>Izvezi sve<small>Svi artikli · Excel (.xlsx)</small></span></button>
-            <button class="exp-item" id="expZel"><span class="ei">✓</span><span>Izvezi samo sa željenim popustom<small>Samo artikli kojima si dodijelio popust</small></span></button>
+            <button class="exp-item" id="expAll"><span class="ei">📄</span><span>Izvezi sve<small>Svi prikazani artikli</small></span></button>
+            <button class="exp-item" id="expZel"><span class="ei">✓</span><span>Izvezi samo sa željenim popustom<small>Prikazani artikli s unesenim popustom</small></span></button>
           </div>
         </div>
         <button class="tbtn ghost" id="clrBtn" title="Obriši sve ručno unesene željene popuste">⟲ Reset popusta</button>
@@ -449,15 +453,18 @@ function cell(d,c){
   return '<td class="'+base+'">'+(d[c.k]??'')+'</td>';
 }
 
-function table(rows){
-  const cols=COLS.filter(c=>visible.has(c.k));
-  const sorted=[...rows].sort((a,b)=>{
+function sortRows(rows){
+  return [...rows].sort((a,b)=>{
     let x,y;
     if(sortK==='zeljeni'){ x=zeljeni[a.sifra]??-1; y=zeljeni[b.sifra]??-1; return (x-y)*sortDir; }
     x=a[sortK];y=b[sortK];
     if(typeof x==='string'){x=x.toLowerCase();y=String(y).toLowerCase();return x<y?-sortDir:x>y?sortDir:0;}
     return (x-y)*sortDir;
   });
+}
+function table(rows){
+  const cols=COLS.filter(c=>visible.has(c.k));
+  const sorted=sortRows(rows);
   const tb=document.getElementById('tbody');
   if(!sorted.length){tb.innerHTML='<tr><td colspan="'+cols.length+'"><div class="empty">Nema artikala za izabrane filtere</div></td></tr>';return;}
   tb.innerHTML=sorted.map(d=>'<tr>'+cols.map(c=>cell(d,c)).join('')+'</tr>').join('');
@@ -563,12 +570,39 @@ document.getElementById('tbody').addEventListener('input',e=>{
   inp.classList.toggle('filled', v!=='');
   saveZeljeni(); updZCount();
 });
+/* Enter -> skok i selekcija ćelije ispod (prati prikazani redoslijed), do zadnjeg reda */
+document.getElementById('tbody').addEventListener('keydown',e=>{
+  const inp=e.target.closest('.zinput'); if(!inp) return;
+  if(e.key==='Enter'){
+    e.preventDefault();
+    const inputs=[...document.querySelectorAll('#tbody .zinput')];
+    const i=inputs.indexOf(inp);
+    if(i>-1 && i<inputs.length-1){ const nx=inputs[i+1]; nx.focus(); nx.select(); nx.scrollIntoView({block:'nearest'}); }
+    else inp.blur();
+  }
+});
 
 /* ---- Excel (.xlsx) izvoz: pun format, offline preko ugrađenog JSZip ---- */
-function makeXlsxParts(rows, zmap){
+function makeXlsxParts(rows, zmap, colKeys){
   const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const COLW=[12,42,11,9,9,7,13,8,9,12,12,11,16];
-  const HEAD=['Šifra','Naziv','Tip','Grupa','Sezona','Godina','Stanje na dan','Ulaz','Izlaz','Novo stanje','Cijena (€)','Popust (%)','Željeni popust (%)'];
+  const DEF={
+    sifra:{h:'Šifra',w:12,s:3,t:'s',v:d=>d.sifra},
+    naziv_clean:{h:'Naziv',w:42,s:3,t:'s',v:d=>d.naziv},
+    tip:{h:'Tip',w:11,s:3,t:'s',v:d=>d.tip},
+    pol:{h:'Grupa',w:9,s:3,t:'s',v:d=>d.pol},
+    sezona:{h:'Sezona',w:9,s:3,t:'s',v:d=>d.sezona},
+    godina:{h:'Godina',w:7,s:5,t:'n',v:d=>d.godina},
+    stanje:{h:'Stanje na dan',w:13,s:4,t:'n',v:d=>d.stanje},
+    ulaz:{h:'Ulaz',w:8,s:4,t:'n',v:d=>d.ulaz},
+    izlaz:{h:'Izlaz',w:9,s:4,t:'n',v:d=>d.izlaz},
+    novo:{h:'Novo stanje',w:12,s:4,t:'n',v:d=>d.novo},
+    cijena:{h:'Cijena (€)',w:12,s:6,t:'n',v:d=>d.cijena},
+    popust:{h:'Popust (%)',w:11,s:7,t:'n',v:d=>d.popust},
+    zeljeni:{h:'Željeni popust (%)',w:16,s:7,hs:2,t:'n',v:d=>zmap[d.sifra]},
+  };
+  if(!colKeys||!colKeys.length) colKeys=Object.keys(DEF);
+  colKeys=colKeys.filter(k=>DEF[k]);
+  const COLW=colKeys.map(k=>DEF[k].w);
   const colLetter=i=>{let s='';i++;while(i){i--;s=String.fromCharCode(65+i%26)+s;i=Math.floor(i/26);}return s;};
   const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
@@ -614,30 +648,27 @@ function makeXlsxParts(rows, zmap){
   }
   let body='';
   let h='<row r="1">';
-  HEAD.forEach((t,i)=>{ h+=cellXml(colLetter(i)+'1', i===12?2:1, t, 's'); });
+  colKeys.forEach((k,i)=>{ h+=cellXml(colLetter(i)+'1', DEF[k].hs||1, DEF[k].h, 's'); });
   h+='</row>'; body+=h;
   rows.forEach((d,ri)=>{
     const r=ri+2; let line=`<row r="${r}">`;
-    const z = (zmap[d.sifra]!==undefined&&zmap[d.sifra]!=='') ? zmap[d.sifra] : '';
-    const cells=[
-      ['A',sIdx.txt,d.sifra,'s'],['B',sIdx.txt,d.naziv,'s'],['C',sIdx.txt,d.tip,'s'],
-      ['D',sIdx.txt,d.pol,'s'],['E',sIdx.txt,d.sezona,'s'],['F',sIdx.god,(d.godina==null?'':d.godina),'n'],
-      ['G',sIdx.int,d.stanje,'n'],['H',sIdx.int,d.ulaz,'n'],['I',sIdx.int,d.izlaz,'n'],['J',sIdx.int,d.novo,'n'],
-      ['K',sIdx.eur,(d.cijena==null?'':d.cijena),'n'],['L',sIdx.pct,(d.popust==null?'':d.popust),'n'],['M',sIdx.pct,(z===''?'':z),'n'],
-    ];
-    cells.forEach(c=>{ line+=cellXml(c[0]+r, c[1], c[2], c[3]); });
+    colKeys.forEach((k,ci)=>{
+      let val=DEF[k].v(d);
+      if(val===undefined||val===null) val='';
+      line+=cellXml(colLetter(ci)+r, DEF[k].s, val, DEF[k].t);
+    });
     line+='</row>'; body+=line;
   });
-  const n=rows.length;
+  const n=rows.length, lastCol=colLetter(colKeys.length-1);
   const colsXml='<cols>'+COLW.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join('')+'</cols>';
   const sheet=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
-<dimension ref="A1:M${n+1}"/>
+<dimension ref="A1:${lastCol}${n+1}"/>
 <sheetViews><sheetView tabSelected="1" workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/><selection pane="bottomLeft" activeCell="A2" sqref="A2"/></sheetView></sheetViews>
 <sheetFormatPr defaultRowHeight="15"/>
 ${colsXml}
 <sheetData>${body}</sheetData>
-<autoFilter ref="A1:M${n+1}"/>
+<autoFilter ref="A1:${lastCol}${n+1}"/>
 </worksheet>`;
   const contentTypes=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
@@ -662,9 +693,9 @@ ${colsXml}
 </Relationships>`;
   return {'[Content_Types].xml':contentTypes,'_rels/.rels':rels,'xl/workbook.xml':wb,'xl/_rels/workbook.xml.rels':wbRels,'xl/styles.xml':styles,'xl/worksheets/sheet1.xml':sheet};
 }
-async function exportXlsx(rows, fname){
+async function exportXlsx(rows, fname, colKeys){
   if(typeof JSZip==='undefined'){ alert('Greška: Excel modul nije učitan.'); return; }
-  const parts=makeXlsxParts(rows, zeljeni);
+  const parts=makeXlsxParts(rows, zeljeni, colKeys);
   const zip=new JSZip();
   Object.entries(parts).forEach(([p,c])=>zip.file(p,c));
   const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE'});
@@ -674,17 +705,21 @@ async function exportXlsx(rows, fname){
   setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);
 }
 const xtoday=()=>new Date().toISOString().slice(0,10);
+const allKeys=()=>COLS.map(c=>c.k);
+const shownKeys=()=>COLS.filter(c=>visible.has(c.k)).map(c=>c.k);
+// dugme otvara meni
 document.getElementById('expBtn').addEventListener('click',e=>{e.stopPropagation();document.getElementById('expMenu').classList.toggle('open');});
 document.getElementById('expMenu').addEventListener('click',e=>e.stopPropagation());
+// obje opcije izvoze PRIKAZANE kolone + FILTRIRANE (i sortirane) redove
 document.getElementById('expAll').addEventListener('click',()=>{
   document.getElementById('expMenu').classList.remove('open');
-  exportXlsx(DATA, BRAND+'_svi_artikli_'+xtoday()+'.xlsx');
+  exportXlsx(sortRows(filtered()), BRAND+'_pregled_'+xtoday()+'.xlsx', shownKeys());
 });
 document.getElementById('expZel').addEventListener('click',()=>{
   document.getElementById('expMenu').classList.remove('open');
-  const samo=DATA.filter(d=>zeljeni[d.sifra]!==undefined&&zeljeni[d.sifra]!=='');
-  if(!samo.length){ alert('Nijedan artikal još nema unesen željeni popust.'); return; }
-  exportXlsx(samo, BRAND+'_zeljeni_popusti_'+xtoday()+'.xlsx');
+  const samo=sortRows(filtered().filter(d=>zeljeni[d.sifra]!==undefined&&zeljeni[d.sifra]!==''));
+  if(!samo.length){ alert('Nijedan prikazani artikal nema unesen željeni popust.'); return; }
+  exportXlsx(samo, BRAND+'_zeljeni_popusti_'+xtoday()+'.xlsx', shownKeys());
 });
 
 /* ---- reset željenih popusta ---- */
