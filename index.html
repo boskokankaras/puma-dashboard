@@ -15,15 +15,19 @@
     --c-patike:#E2231A; --c-kopacke:#15171C; --c-papuce:#E8A33D; --c-sandale:#3E7C78; --c-ostalo:#9A9388;
     --c-musko:#2B3A55; --c-zensko:#E2231A; --c-djeca:#3E7C78; --c-baby:#E8A33D; --c-nep:#9A9388;
     --radius:16px; --shadow:0 1px 2px rgba(20,22,28,.04),0 8px 24px rgba(20,22,28,.06);
+    /* role-varijable (preokrecu se u tamnom modu) */
+    --invert-bg:#15171C; --invert-fg:#fff;
+    --row-hover:#FBFAF7; --dot:rgba(20,22,28,.04);
+    --trash-bg:#fdecec; --trash-fg:#d6332b;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Archivo',system-ui,sans-serif;background:var(--paper);color:var(--ink);
     -webkit-font-smoothing:antialiased;line-height:1.45;
-    background-image:radial-gradient(circle at 1px 1px, rgba(20,22,28,.04) 1px, transparent 0);background-size:22px 22px;}
+    background-image:radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0);background-size:22px 22px;}
   .wrap{max-width:1240px;margin:0 auto;padding:0 22px 64px}
 
   /* HEADER */
-  header.top{background:var(--ink);color:#fff;border-bottom:3px solid var(--accent);}
+  header.top{background:var(--invert-bg);color:var(--invert-fg);border-bottom:3px solid var(--accent);}
   .top-in{max-width:1240px;margin:0 auto;padding:22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .brand{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:26px;letter-spacing:-.02em;line-height:1;
     display:flex;align-items:center;gap:12px}
@@ -31,8 +35,8 @@
     padding:5px 10px;border-radius:6px;text-transform:uppercase}
   .vtag{background:#2B3A55;color:#fff;font-family:'Archivo';font-weight:700;font-size:10.5px;letter-spacing:.1em;
     padding:4px 9px;border-radius:6px;text-transform:uppercase}
-  .sub{color:#C9C5BC;font-size:13.5px;font-weight:500;margin-left:auto;text-align:right}
-  .sub b{color:#fff;font-weight:700}
+  .sub{margin-left:auto;display:flex;align-items:center;gap:10px;color:#C9C5BC;font-size:13.5px;font-weight:600;white-space:nowrap}
+  .hdr-logo{height:28px;width:auto;display:block;flex:none}
 
   /* TOOLBAR */
   .toolbar{position:sticky;top:0;z-index:30;background:rgba(239,237,231,.86);backdrop-filter:blur(10px);
@@ -45,7 +49,7 @@
   select:focus,.search input:focus{outline:none;border-color:var(--accent)}
   .search{flex:1;min-width:200px}
   .search input{width:100%;cursor:text}
-  .reset{font-family:'Archivo';font-weight:700;font-size:13px;letter-spacing:.02em;color:#fff;background:var(--ink);
+  .reset{font-family:'Archivo';font-weight:700;font-size:13px;letter-spacing:.02em;color:var(--invert-fg);background:var(--invert-bg);
     border:none;border-radius:10px;padding:10px 16px;cursor:pointer;transition:background .15s;height:40px}
   .reset:hover{background:var(--accent)}
 
@@ -79,7 +83,7 @@
   .fgrid .field.wide{grid-column:1 / -1}
   .fmenu select{width:100%;min-width:0}
   .fmenu-foot{display:flex;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
-  .fmenu-foot button{font-family:'Archivo';font-weight:700;font-size:12.5px;border:none;border-radius:9px;padding:9px 16px;cursor:pointer;background:var(--ink);color:#fff;transition:background .15s}
+  .fmenu-foot button{font-family:'Archivo';font-weight:700;font-size:12.5px;border:none;border-radius:9px;padding:9px 16px;cursor:pointer;background:var(--invert-bg);color:var(--invert-fg);transition:background .15s}
   .fmenu-foot button:hover{background:var(--accent)}
   /* čipovi aktivnih filtera */
   .chips{max-width:1240px;margin:0 auto;padding:0 22px;display:flex;flex-wrap:wrap;gap:8px;margin-top:-14px;margin-bottom:22px}
@@ -105,7 +109,7 @@
   .exp-item small{display:block;font-size:11.5px;color:var(--muted2);font-weight:500;margin-top:1px}
 
   /* KPIs */
-  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:26px}
+  .kpis{display:grid;grid-template-columns:repeat(5,minmax(max-content,1fr));gap:14px;margin-bottom:26px}
   .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 16px;
     box-shadow:var(--shadow);position:relative;overflow:hidden;animation:rise .5s both}
   .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
@@ -148,14 +152,14 @@
   .tbtn.ghost{border-style:dashed;color:var(--muted)}
   .tscroll{max-height:600px;overflow:auto}
   table{width:100%;border-collapse:collapse;font-size:13px}
-  thead th{position:sticky;top:0;background:var(--ink);color:#fff;font-weight:700;font-size:11px;letter-spacing:.06em;
+  thead th{position:sticky;top:0;background:var(--invert-bg);color:var(--invert-fg);font-weight:700;font-size:11px;letter-spacing:.06em;
     text-transform:uppercase;padding:11px 14px;cursor:pointer;white-space:nowrap;user-select:none}
   thead th.zhead{background:var(--accent)}
   thead th .arr{opacity:.35;margin-left:4px;font-size:9px}
-  thead th.sorted .arr{opacity:1;color:#fff}
+  thead th.sorted .arr{opacity:1;color:var(--invert-fg)}
   thead th.zhead.sorted .arr{color:#fff}
   tbody td{padding:9px 14px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;white-space:nowrap}
-  tbody tr:hover{background:#FBFAF7}
+  tbody tr:hover{background:var(--row-hover)}
   .ta-l{text-align:left}.ta-r{text-align:right}
   td.c-sifra{font-weight:700;color:var(--ink2);font-variant-numeric:normal}
   td.c-naziv{font-weight:500;max-width:280px;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:normal}
@@ -163,16 +167,16 @@
   .num-strong{font-weight:800}
   .pct-muted{color:var(--muted2)}
   /* editable željeni popust */
-  td.zcell{background:color-mix(in srgb,var(--accent) 5%,#fff)}
-  tbody tr:hover td.zcell{background:color-mix(in srgb,var(--accent) 9%,#fff)}
+  td.zcell{background:color-mix(in srgb,var(--accent) 5%,var(--surface))}
+  tbody tr:hover td.zcell{background:color-mix(in srgb,var(--accent) 9%,var(--surface))}
   .zinput{width:74px;font-family:'Archivo';font-size:13px;font-weight:700;color:var(--muted2);text-align:right;
     border:1.5px solid transparent;border-radius:8px;padding:5px 8px;background:transparent;
     font-variant-numeric:tabular-nums;transition:all .12s;-moz-appearance:textfield}
   .zinput::-webkit-outer-spin-button,.zinput::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-  .zinput::placeholder{color:#C9C3B8;font-weight:600}
+  .zinput::placeholder{color:var(--muted2);font-weight:600}
   .zinput:hover{border-color:var(--line)}
-  .zinput:focus{outline:none;border-color:var(--accent);background:#fff;color:var(--ink)}
-  .zinput.filled{color:var(--accent);background:#fff;border-color:var(--accent-soft)}
+  .zinput:focus{outline:none;border-color:var(--accent);background:var(--surface);color:var(--ink)}
+  .zinput.filled{color:var(--accent);background:var(--surface);border-color:var(--accent-soft)}
   .zsuffix{font-size:11px;color:var(--muted2);font-weight:700;margin-left:2px}
 
   footer{margin-top:30px;text-align:center;font-size:12px;color:var(--muted2);font-weight:500}
@@ -189,19 +193,76 @@
   @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.sub{margin-left:0;text-align:left;width:100%}}
   @media(max-width:640px){.fmenu,.colmenu{position:fixed;left:0;right:0;bottom:0;top:auto;width:auto;max-width:none;border-radius:16px 16px 0 0;max-height:82vh;overflow-y:auto;box-shadow:0 -10px 40px rgba(20,22,28,.2)}}
   @media print{.toolbar{display:none}body{background:#fff}.card,.kpi,.tablecard{box-shadow:none;animation:none}}
+
+  /* === Predlog snizenja (analiza) === */
+  .count,.zcount{white-space:nowrap;width:auto;display:inline-flex;align-items:center}
+  .aibtn{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .aibtn:hover{filter:brightness(1.08);border-color:var(--accent);color:#fff}
+  .an-overlay{position:fixed;inset:0;z-index:200;background:rgba(20,22,28,.45);backdrop-filter:blur(3px);
+    display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+  .an-overlay.open{display:flex;animation:fade .2s both}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .an-modal{background:var(--paper);border:1px solid var(--line);border-radius:18px;width:780px;max-width:100%;
+    box-shadow:0 24px 70px rgba(20,22,28,.3);display:flex;flex-direction:column;max-height:88vh;animation:rise .25s both}
+  .an-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:22px 24px 14px;border-bottom:1px solid var(--line)}
+  .an-head h2{font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;letter-spacing:-.01em}
+  .an-sub{font-size:13px;color:var(--muted);margin-top:4px;font-weight:600}
+  .an-x{border:none;background:var(--surface);color:var(--muted);width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:16px;flex:none}
+  .an-x:hover{background:var(--line);color:var(--ink)}
+  .an-body{padding:18px 24px;overflow-y:auto}
+  .an-how{margin:0 0 18px;font-size:12.5px;color:var(--muted2);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .an-how summary{cursor:pointer;font-weight:700;color:var(--ink2);display:flex;align-items:center;list-style:none}
+  .an-how summary::-webkit-details-marker{display:none}
+  .an-i{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;font-style:normal;margin-right:8px;flex:none;font-family:'Bricolage Grotesque'}
+  .an-how div{margin-top:9px;line-height:1.6}
+  .an-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+  .an-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .an-card .v{font-family:'Bricolage Grotesque';font-weight:800;font-size:24px;letter-spacing:-.01em}
+  .an-card .v .unit{font-size:14px;color:var(--muted);font-weight:700;margin-right:2px}
+  .an-card .l{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+  .an-reasons{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .an-rchip{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1.5px solid var(--line);border-radius:20px;padding:6px 13px;font-size:12.5px;font-weight:700;color:var(--ink2)}
+  .an-rchip b{color:var(--accent)}
+  .an-listhead{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .an-list{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .an-row{display:grid;grid-template-columns:1fr auto auto auto auto;gap:12px;align-items:center;padding:10px 12px 10px 14px;border-bottom:1px solid var(--line);font-size:13.5px;transition:opacity .12s}
+  .an-row:last-child{border-bottom:none}
+  .an-row:nth-child(even){background:var(--surface)}
+  .an-row .nm{font-weight:700;color:var(--ink)}
+  .an-row .why{font-size:11.5px;color:var(--muted);font-weight:600;margin-top:2px}
+  .an-row .cur{font-size:11.5px;color:var(--muted);font-weight:600;text-align:right;line-height:1.45}
+  .an-trash{border:none;background:none;color:var(--muted);cursor:pointer;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}
+  .an-trash:hover{background:var(--trash-bg);color:var(--trash-fg)}
+  .an-pill{font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:#fff;background:var(--accent);border-radius:8px;padding:6px 12px;min-width:52px;text-align:center}
+  .an-step{display:flex;flex-direction:column;gap:3px}
+  .an-sbtn{border:1.5px solid var(--line);background:var(--surface);color:var(--ink2);width:26px;height:20px;border-radius:6px;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;font-weight:800}
+  .an-sbtn:hover{border-color:var(--accent);color:var(--accent)}
+  .an-more{display:flex;gap:10px;justify-content:center;margin-top:14px}
+  .an-more:empty{display:none}
+  .an-morebtn{font-family:'Archivo';font-weight:700;font-size:12.5px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink2);border-radius:9px;padding:9px 16px;cursor:pointer}
+  .an-morebtn:hover{border-color:var(--accent);color:var(--accent)}
+  .an-morebtn.ghost{background:none}
+  .an-empty{padding:28px;text-align:center;color:var(--muted);font-weight:600}
+  .an-foot{display:flex;gap:10px;justify-content:flex-end;padding:16px 24px;border-top:1px solid var(--line)}
+  .an-apply{font-family:'Archivo';font-weight:700;font-size:13.5px;border:none;border-radius:10px;padding:11px 18px;cursor:pointer;background:var(--accent);color:#fff}
+  .an-apply:hover{filter:brightness(1.08)}
+  .an-apply:disabled{background:var(--line);color:var(--muted);cursor:default;filter:none}
+  .an-cancel{font-family:'Archivo';font-weight:700;font-size:13.5px;border:1.5px solid var(--line);border-radius:10px;padding:11px 18px;cursor:pointer;background:var(--surface);color:var(--ink2)}
+  .an-cancel:hover{border-color:var(--accent)}
+  @media(max-width:640px){.an-stats{grid-template-columns:1fr}.an-row{grid-template-columns:1fr auto auto auto}.an-row .cur{display:none}}
 </style>
 </head>
 <body>
 <header class="top">
   <div class="top-in">
     <div class="brand"><span class="pill" id="brandPill">Puma + Skechers</span> Analiza i planer popusta <span class="vtag">v3.0</span></div>
-    <div class="sub">Poklopljeni artikli · <b id="hdrCount">684</b> SKU · podaci iz K&nbsp;Sport sistema</div>
+    <div class="sub">Made by Boško Bog<img class="hdr-logo" src="data:image/png;base64,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" alt="K Sport"></div>
   </div>
 </header>
 
 <div class="toolbar">
   <div class="toolbar-in">
-    <div class="field search"><label>Pretraga (naziv ili šifra)</label><input id="fQ" type="text" placeholder="npr. ULTRA, CALI, 107949…"></div>
+    <div class="field search"><label>Pretraga (naziv ili šifra)</label><input id="fQ" type="text" placeholder="npr. naziv ili šifra…"></div>
     <div class="colwrap">
       <button class="colbtn" id="filtBtn">Filteri <span class="cnt" id="filtCnt"></span> ▾</button>
       <div class="fmenu" id="filtMenu">
@@ -238,7 +299,7 @@
       
       <span class="count" id="tcount">684</span>
       <span class="zcount" id="zcount">0 sa željenim popustom</span>
-      <div class="tbtns">
+      <div class="tbtns"><button class="tbtn aibtn" id="anBtn">⚡ Predlog popusta</button>
         <div class="expwrap">
           <button class="tbtn" id="expBtn" title="Izvoz u Excel — uvijek izvozi prikazane kolone i filtrirane redove">⇩ Izvoz (.xlsx) ▾</button>
           <div class="expmenu" id="expMenu">
@@ -271,6 +332,32 @@
   <footer>Dashboard generisan iz <b>ARTIKLI_MARKO.ods</b> + <b>izlaz Puma + Skechers</b> · K&nbsp;Sport · 07.06.2026. · v3.0</footer>
 </div>
 
+<div class="an-overlay" id="anOverlay">
+  <div class="an-modal">
+    <div class="an-head">
+      <div><h2>Predlog sniženja</h2><div class="an-sub" id="anSub"></div></div>
+      <button class="an-x" id="anClose" title="Zatvori">✕</button>
+    </div>
+    <div class="an-body">
+      <details class="an-how"><summary><span class="an-i">i</span>Kako se računa predlog?</summary>
+        <div>Računa se nad <b>trenutno filtriranim</b> artiklima koji još imaju zalihu. Predlog je uvijek
+        <b>20, 30, 40 ili 50%</b> — bira se po <b>starosti kolekcije</b> (glavni signal), koriguje se
+        <b>obrtom</b> (sporo se prodaje → veći, dobro se prodaje → manji), a posebno se hvata i
+        <b>velika mrtva zaliha</b> kod mlađe robe. Nudi se samo ako je veći od trenutnog rabata.
+        Strelicama <b>+ / −</b> mijenjaš predlog (20↔30↔40↔50), a korpicom uklanjaš artikal iz plana.</div>
+      </details>
+      <div class="an-stats" id="anStats"></div>
+      <div class="an-reasons" id="anReasons"></div>
+      <div class="an-listhead">Predlog po artiklu <span id="anListCount"></span></div>
+      <div class="an-list" id="anList"></div>
+      <div class="an-more" id="anMore"></div>
+    </div>
+    <div class="an-foot">
+      <button class="an-cancel" id="anClose2">Zatvori</button>
+      <button class="an-apply" id="anApply">Primijeni u „Željeni popust"</button>
+    </div>
+  </div>
+</div>
 <script>/*!
 
 JSZip v3.10.1 - A JavaScript class for generating and reading zip files
@@ -773,6 +860,134 @@ document.addEventListener('click',e=>{const r=e.target.closest('.bar-row');if(!r
 });
 
 buildColMenu();
+/* === Predlog sniženja (analiza popusta) === */
+const NOW_Y = new Date().getFullYear();
+const ALLOWED = [20,30,40,50];
+const TRASH = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6m4 5v6m4-6v6"/></svg>';
+let anLast = [];
+let anShown = 20;
+function quantile(arr,q){ if(!arr.length) return 0; const s=[...arr].sort((a,b)=>a-b); const p=(s.length-1)*q; const lo=Math.floor(p),hi=Math.ceil(p); return lo===hi ? s[lo] : s[lo]+(s[hi]-s[lo])*(p-lo); }
+function analyzeRows(rows){
+  const cand = rows.filter(d=>d.novo>0);
+  const q90 = quantile(cand.map(d=>d.novo), 0.90);
+  const out=[];
+  cand.forEach(d=>{
+    const moved=d.izlaz, rem=d.novo, denom=moved+rem;
+    const st = denom>0 ? moved/denom : 0;
+    const age = d.godina ? (NOW_Y - d.godina) : 0;
+    let idx = age>=5?3 : age===4?2 : age===3?1 : age===2?0 : -1;
+    let over=false;
+    if(idx>=0){
+      if(st<0.20) idx=Math.min(idx+1,3); else if(st>0.70) idx=Math.max(idx-1,0);
+    } else if(rem>=q90 && q90>0 && st<0.08){
+      idx=0; over=true;
+    }
+    if(idx<0) return;
+    const sug = ALLOWED[idx];
+    const cur = d.popust||0;
+    if(sug>cur){
+      const why=[];
+      const sezg=[]; if(d.sezona && d.sezona!=='Nepoznato') sezg.push(d.sezona); if(d.godina) sezg.push(d.godina);
+      if(sezg.length) why.push(sezg.join(' '));
+      if(st<0.30) why.push('slab obrt ('+Math.round(st*100)+'% prodato)');
+      if(over || (rem>=q90 && q90>0)) why.push('velika zaliha ('+fmt(rem)+' kom)');
+      out.push({d:d, sug:sug, cur:cur, age:age, st:st, rem:rem, over:over, why: why.join(' · ') || 'spor obrt'});
+    }
+  });
+  out.sort((a,b)=> (b.sug*b.rem*b.d.cijena) - (a.sug*a.rem*a.d.cijena));
+  return out;
+}
+function rowHTML(x){
+  return '<div class="an-row" data-sifra="'+x.d.sifra+'">'+
+    '<div class="an-main"><div class="nm">'+x.d.naziv_clean+'</div><div class="why">'+x.why+'</div></div>'+
+    '<div class="cur">trenutno '+pct(x.cur)+'%<br>zaliha '+fmt(x.rem)+' kom</div>'+
+    '<button class="an-trash" data-act="trash" title="Ukloni iz plana">'+TRASH+'</button>'+
+    '<div class="an-pill">'+x.sug+'%</div>'+
+    '<div class="an-step"><button class="an-sbtn" data-act="plus" title="Povećaj">+</button>'+
+    '<button class="an-sbtn" data-act="minus" title="Smanji">−</button></div></div>';
+}
+function renderSummary(){
+  const n=anLast.length;
+  const stockVal=anLast.reduce((s,x)=>s+x.rem*x.d.cijena,0);
+  const mdVal=anLast.reduce((s,x)=>s+x.rem*x.d.cijena*x.sug/100,0);
+  const nOld=anLast.filter(x=>x.age>=2).length;
+  const nSlow=anLast.filter(x=>x.st<0.30).length;
+  const nBig=anLast.filter(x=>x.over).length;
+  document.getElementById('anStats').innerHTML=[
+    ['Za sniženje', String(n), 'artikala'],
+    ['Vrijednost zalihe', '<span class="unit">€</span>'+eur(stockVal), 'tih artikala (MP)'],
+    ['Iznos sniženja', '<span class="unit">€</span>'+eur(mdVal), 'ako se proda po predlogu'],
+  ].map(c=>'<div class="an-card"><div class="v">'+c[1]+'</div><div class="l">'+c[0]+'</div></div>').join('');
+  document.getElementById('anReasons').innerHTML = n ? [
+    ['Starija roba (2+ g.)', nOld],['Slab obrt', nSlow],['Velika mrtva zaliha', nBig]
+  ].filter(x=>x[1]>0).map(x=>'<span class="an-rchip">'+x[0]+' <b>'+x[1]+'</b></span>').join('') : '';
+  document.getElementById('anListCount').textContent = n ? '('+n+')' : '';
+  const ap=document.getElementById('anApply');
+  ap.disabled = !n;
+  ap.textContent = n ? ('Primijeni '+n+' u „Željeni popust"') : 'Primijeni u „Željeni popust"';
+}
+function renderMore(){
+  const m=document.getElementById('anMore');
+  const rem=anLast.length-anShown;
+  m.innerHTML = rem>0
+    ? '<button class="an-morebtn" data-more="20">Prikaži još '+Math.min(20,rem)+'</button>'+
+      '<button class="an-morebtn ghost" data-more="all">Prikaži sve ('+anLast.length+')</button>'
+    : '';
+}
+function renderList(){
+  const list=document.getElementById('anList');
+  if(!anLast.length){ list.innerHTML='<div class="an-empty">Nema artikala koji se ističu za sniženje u ovom izboru.</div>'; renderMore(); return; }
+  list.innerHTML = anLast.slice(0, anShown).map(rowHTML).join('');
+  renderMore();
+}
+function openAnalysis(){
+  anLast = analyzeRows(filtered());
+  anShown = Math.min(20, anLast.length);
+  document.getElementById('anSub').textContent = anLast.length
+    ? ('Predloženo '+anLast.length+' za sniženje — strelicama mijenjaš, korpicom uklanjaš')
+    : 'Analiza trenutnog izbora';
+  renderSummary();
+  renderList();
+  document.getElementById('anOverlay').classList.add('open');
+}
+function closeAnalysis(){ document.getElementById('anOverlay').classList.remove('open'); }
+document.getElementById('anBtn').addEventListener('click', openAnalysis);
+document.getElementById('anClose').addEventListener('click', closeAnalysis);
+document.getElementById('anClose2').addEventListener('click', closeAnalysis);
+document.getElementById('anOverlay').addEventListener('click', e=>{ if(e.target.id==='anOverlay') closeAnalysis(); });
+document.getElementById('anList').addEventListener('click', e=>{
+  const btn=e.target.closest('[data-act]'); if(!btn) return;
+  const row=e.target.closest('.an-row'); const sifra=row.dataset.sifra;
+  const item=anLast.find(x=>x.d.sifra===sifra); if(!item) return;
+  const act=btn.dataset.act;
+  if(act==='trash'){
+    anLast=anLast.filter(x=>x.d.sifra!==sifra);
+    row.style.opacity='0'; setTimeout(()=>row.remove(),120);
+    renderSummary(); renderMore();
+  } else {
+    let i=ALLOWED.indexOf(item.sug); if(i<0) i=0;
+    i = act==='plus' ? Math.min(i+1,ALLOWED.length-1) : Math.max(i-1,0);
+    item.sug=ALLOWED[i];
+    row.querySelector('.an-pill').textContent=item.sug+'%';
+    renderSummary();
+  }
+});
+document.getElementById('anMore').addEventListener('click', e=>{
+  const b=e.target.closest('[data-more]'); if(!b) return;
+  const list=document.getElementById('anList');
+  if(b.dataset.more==='all'){
+    list.insertAdjacentHTML('beforeend', anLast.slice(anShown).map(rowHTML).join('')); anShown=anLast.length;
+  } else {
+    list.insertAdjacentHTML('beforeend', anLast.slice(anShown, anShown+20).map(rowHTML).join('')); anShown+=20;
+  }
+  renderMore();
+});
+document.getElementById('anApply').addEventListener('click', ()=>{
+  if(!anLast.length) return;
+  if(!confirm('Upisati predložene popuste za '+anLast.length+' artikala u kolonu „Željeni popust"? Postojeći ručni unosi za te artikle biće zamijenjeni.')) return;
+  anLast.forEach(x=>{ zeljeni[x.d.sifra]=x.sug; });
+  saveZeljeni(); render(); closeAnalysis();
+});
 render();
 </script>
 </body>
